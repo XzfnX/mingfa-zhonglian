@@ -74,7 +74,7 @@ export default function NotFoundPage() {
       <footer className="border-t border-line bg-white">
         <div className="mf-container py-6">
           <p className="text-xs leading-relaxed text-ink-soft">
-            明法众联 · 参赛路演演示版本。本网站不提供真实支付、真实法律咨询与真实用户注册功能。
+            明法众联 · 智慧普法服务平台
           </p>
         </div>
       </footer>

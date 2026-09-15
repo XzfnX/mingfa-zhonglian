@@ -23,6 +23,8 @@ const sectionLinks = [
 
 function Navigation({ onNavigate }: { onNavigate?: () => void }) {
   const { user } = useAuth()
+  const currentSolution = solutions.find((item) => item.id === user?.institutionType)
+  const CurrentSolutionIcon = currentSolution?.icon
   return (
     <nav className="mt-6 flex-1 overflow-y-auto px-3 pb-5 mf-scrollbar" aria-label="机构工作台导航">
       <p className="px-3 text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">工作区</p>
@@ -30,18 +32,8 @@ function Navigation({ onNavigate }: { onNavigate?: () => void }) {
         <LayoutDashboard className="h-4 w-4" />工作台
       </NavLink>
 
-      <p className="mb-2 mt-6 px-3 text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">解决方案</p>
-      {solutions.map((item) => {
-        const Icon = item.icon
-        const current = user?.institutionType === item.id
-        return (
-          <NavLink key={item.id} to={item.to} onClick={onNavigate} className={({ isActive }) => cx('flex min-h-[42px] items-center gap-3 border-l-2 px-3 text-sm', isActive ? 'border-white bg-white/10 text-white' : 'border-transparent text-slate-300 hover:bg-white/5 hover:text-white')}>
-            <Icon className="h-4 w-4 shrink-0" />
-            <span className="flex-1">{item.label}</span>
-            {current && <span className="text-[10px] text-red-200">当前</span>}
-          </NavLink>
-        )
-      })}
+      <p className="mb-2 mt-6 px-3 text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">本机构方案</p>
+      {currentSolution && CurrentSolutionIcon && <NavLink to={currentSolution.to} onClick={onNavigate} className={({ isActive }) => cx('flex min-h-[42px] items-center gap-3 border-l-2 px-3 text-sm', isActive ? 'border-white bg-white/10 text-white' : 'border-transparent text-slate-300 hover:bg-white/5 hover:text-white')}><CurrentSolutionIcon className="h-4 w-4 shrink-0" /><span className="flex-1">{currentSolution.label}</span></NavLink>}
 
       <p className="mb-2 mt-6 px-3 text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">运营管理</p>
       {sectionLinks.map((item) => {
@@ -64,7 +56,6 @@ export function InstitutionSidebar() {
           <BrandMark tone="light" size={36} subtitle="机构服务平台" />
         </Link>
         <Navigation />
-        <div className="border-t border-white/10 px-5 py-4 text-[11px] leading-5 text-slate-400">路演演示环境<br />数据均为本地模拟内容</div>
       </aside>
 
       <button type="button" onClick={() => setDrawer(true)} className="fixed left-3 top-[14px] z-[61] flex h-10 w-10 items-center justify-center border border-line bg-white text-ink lg:hidden" aria-label="打开机构导航"><Menu className="h-5 w-5" /></button>
@@ -95,7 +86,7 @@ export function InstitutionTopBar() {
   return (
     <header className="sticky top-0 z-40 flex h-[68px] items-center justify-between border-b border-line bg-white pl-16 pr-4 sm:pr-6 lg:pl-8 lg:pr-8">
       <div className="hidden min-w-0 sm:block">
-        <p className="truncate text-sm font-semibold text-ink">{user?.orgName ?? '演示机构'}</p>
+        <p className="truncate text-sm font-semibold text-ink">{user?.orgName ?? '机构工作台'}</p>
         <p className="mt-0.5 text-xs text-ink-soft">{user?.orgRole ?? institutionTypeLabel[user?.institutionType ?? ''] ?? '机构管理员'}</p>
       </div>
       <div className="relative hidden w-full max-w-[320px] md:block">

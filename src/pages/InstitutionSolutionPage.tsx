@@ -24,7 +24,7 @@ import { cx } from '../lib/utils'
 import NotFoundPage from './NotFoundPage'
 
 /** B 端方案详情页（通过路由参数加载对应行业方案） */
-export default function InstitutionSolutionPage({ solutionId }: { solutionId: string }) {
+export default function InstitutionSolutionPage({ solutionId, adminView = false }: { solutionId: string; adminView?: boolean }) {
   const solution = institutionSolutions.find((s) => s.id === solutionId)
   const { user } = useAuth()
   const [modalOpen, setModalOpen] = useState(false)
@@ -33,13 +33,13 @@ export default function InstitutionSolutionPage({ solutionId }: { solutionId: st
 
   if (!solution) return <NotFoundPage />
 
-  const isCurrentOrg = user?.institutionType === solution.id
+  const homePath = adminView ? '/admin' : '/institution'
 
   return (
     <div className="space-y-8">
       {/* 返回 */}
       <nav>
-        <Link to="/institution" className="mf-btn-ghost gap-1.5 px-3 text-[13px]">
+        <Link to={homePath} className="mf-btn-ghost gap-1.5 px-3 text-[13px]">
           <ArrowLeft className="h-4 w-4" aria-hidden="true" />
           返回方案总览
         </Link>
@@ -51,11 +51,7 @@ export default function InstitutionSolutionPage({ solutionId }: { solutionId: st
           <div className="max-w-2xl">
             <div className="flex flex-wrap items-center gap-2">
               <Pill tone="brand">{institutionTypeLabel[solution.id]}解决方案</Pill>
-              {isCurrentOrg ? (
-                <Pill tone="gold">当前机构对应方案</Pill>
-              ) : (
-                <Pill tone="neutral">行业方案浏览</Pill>
-              )}
+              <Pill tone="gold">{adminView ? '管理员查看' : '本机构方案'}</Pill>
             </div>
             <h1 className="mt-3 font-serif text-[24px] font-semibold leading-snug text-ink sm:text-[28px]">
               {solution.productName}
@@ -68,7 +64,7 @@ export default function InstitutionSolutionPage({ solutionId }: { solutionId: st
           </div>
           <button type="button" onClick={() => setModalOpen(true)} className="mf-btn-primary gap-1.5">
             <CalendarCheck className="h-4 w-4" aria-hidden="true" />
-            预约方案演示
+            方案咨询
           </button>
         </div>
 
@@ -80,9 +76,6 @@ export default function InstitutionSolutionPage({ solutionId }: { solutionId: st
             </div>
           ))}
         </dl>
-        <p className="mt-3 text-[11px] text-ink-soft">
-          以上指标为演示用模拟数据，用于展示产品能力与看板结构，不代表任何真实业务系统数据。
-        </p>
       </header>
 
       {/* 需求痛点 */}
@@ -110,7 +103,7 @@ export default function InstitutionSolutionPage({ solutionId }: { solutionId: st
           id="modules-title"
           eyebrow="核心功能模块"
           title={`${solution.modules.length} 个核心模块构成完整产品能力`}
-          desc="点击任意模块可展开查看具体功能要点。所有模块均为前端演示形态，不连接真实业务系统。"
+          desc="点击任意模块可展开查看具体功能要点。"
           className="mb-6"
         />
         <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -163,7 +156,7 @@ export default function InstitutionSolutionPage({ solutionId }: { solutionId: st
           id="charts-title"
           eyebrow="成效评估看板"
           title="数据化展示普法工作开展情况"
-          desc="图表支持维度筛选（例如切换时间范围）与悬停查看具体数值。所有数据均为演示用模拟数据。"
+          desc="图表支持维度筛选与悬停查看具体数值。"
           className="mb-6"
         />
         <div className="grid gap-5 lg:grid-cols-2">
@@ -244,18 +237,17 @@ export default function InstitutionSolutionPage({ solutionId }: { solutionId: st
           <div className="flex flex-wrap gap-3">
             <button type="button" onClick={() => setModalOpen(true)} className="mf-btn-primary gap-1.5">
               <CalendarCheck className="h-4 w-4" aria-hidden="true" />
-              预约方案演示
+              方案咨询
             </button>
-            <Link to="/institution" className="mf-btn-outline gap-1.5">
+            <Link to={homePath} className="mf-btn-outline gap-1.5">
               <Layers className="h-4 w-4" aria-hidden="true" />
-              对比其他方案
+              {adminView ? '返回管理总览' : '返回工作台'}
             </Link>
           </div>
         </div>
       </div>
 
-      {/* 切换其他方案 */}
-      <section aria-labelledby="switch-title">
+      {adminView && <section aria-labelledby="switch-title">
         <h2 id="switch-title" className="mb-4 flex items-center gap-2 font-serif text-[18px] font-semibold text-ink">
           <PackageCheck className="h-4.5 w-4.5 text-brand" aria-hidden="true" />
           切换查看其他行业方案
@@ -266,7 +258,7 @@ export default function InstitutionSolutionPage({ solutionId }: { solutionId: st
             return (
               <li key={s.id}>
                 <Link
-                  to={`/institution/${s.id}`}
+                  to={`/admin/${s.id}`}
                   aria-current={current ? 'page' : undefined}
                   className={cx(
                     'block h-full rounded-xl2 border p-4 transition-colors',
@@ -281,7 +273,7 @@ export default function InstitutionSolutionPage({ solutionId }: { solutionId: st
             )
           })}
         </ul>
-      </section>
+      </section>}
 
       <DemoRequestModal
         open={modalOpen}

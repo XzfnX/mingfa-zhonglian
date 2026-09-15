@@ -241,36 +241,36 @@ export default function AboutPage() {
         <div className="mf-container">
           <SectionHeading
             eyebrow="项目说明"
-            title="本演示网站的能力边界"
-            desc="作为参赛路演 Demo，网站刻意保留了一些边界，以确保展示的是产品能力而不是虚假业务数据。"
+            title="平台服务与产品能力"
+            desc="围绕群众普法、机构业务与平台运营，形成边界清晰的三层服务体系。"
             className="mb-8"
           />
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             <BoundaryCard
-              title="不提供的功能"
+              title="个人端服务"
               items={[
-                '真实支付与真实购买',
-                '真实短信验证码与用户注册',
-                '真实法律咨询与法律结论',
-                '真实文件上传与信息采集',
+                '通俗普法咨询与问题分流',
+                '生活案例与文书指引',
+                '法律援助申请路径',
+                '重点人群服务专区',
               ]}
             />
             <BoundaryCard
-              title="前端模拟的部分"
+              title="机构端能力"
               items={[
-                '登录与身份区分（sessionStorage）',
-                '智能咨询回答（本地静态数据）',
-                '语音输入与播报（模拟状态流转）',
-                '预约演示提交（仅前端状态）',
+                '按机构独立配置工作台',
+                '项目、资源与交付统一管理',
+                '服务覆盖与成效评估',
+                '四类行业解决方案',
               ]}
             />
             <BoundaryCard
-              title="技术实现说明"
+              title="管理端能力"
               items={[
-                '纯前端项目，无后端服务器与数据库',
-                '不调用任何外部业务接口或 API',
-                '图表与指标均为演示用模拟数据',
-                '路由保护仅用于演示身份区分',
+                '四类机构统一运营总览',
+                '机构运行状态集中查看',
+                '跨机构项目指标对比',
+                '进入各机构后台检查业务',
               ]}
             />
           </div>
@@ -304,7 +304,7 @@ export default function AboutPage() {
               </Link>
               <button type="button" onClick={() => setModalOpen(true)} className="mf-btn-ghost gap-1.5 px-3">
                 <CalendarCheck className="h-4 w-4" aria-hidden="true" />
-                预约演示
+                方案咨询
                 <ArrowRight className="h-4 w-4" aria-hidden="true" />
               </button>
             </div>
@@ -313,7 +313,7 @@ export default function AboutPage() {
           <div className="mt-6">
             <p className="flex flex-wrap items-center justify-center gap-2 text-center text-[13px] text-ink-soft">
               <Info className="h-4 w-4 text-brand" aria-hidden="true" />
-              本网站为大学生创新创业比赛参赛 Demo，仅用于公益普法宣传与产品能力演示。
+              普法内容仅供一般性参考，具体事项请咨询专业律师或当地法律援助机构。
               <Link to="/" className="mf-link">
                 返回首页
               </Link>

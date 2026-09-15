@@ -2,8 +2,9 @@ import { Routes, Route, Navigate } from 'react-router-dom'
 import { AuthProvider } from './context/AuthContext'
 import { ToastProvider } from './context/ToastContext'
 import { AccessibilityProvider } from './context/AccessibilityContext'
-import { PublicShell, CitizenShell, InstitutionShell } from './components/AppShell'
+import { PublicShell, CitizenShell, InstitutionShell, AdminShell } from './components/AppShell'
 import { ProtectedRoute } from './components/ProtectedRoute'
+import { InstitutionScopeRoute } from './components/InstitutionScopeRoute'
 
 import LoginGatewayPage from './pages/LoginGatewayPage'
 import CitizenHomePage from './pages/CitizenHomePage'
@@ -16,6 +17,7 @@ import InstitutionSolutionPage from './pages/InstitutionSolutionPage'
 import ResultsPage from './pages/ResultsPage'
 import AboutPage from './pages/AboutPage'
 import NotFoundPage from './pages/NotFoundPage'
+import AdminHomePage from './pages/AdminHomePage'
 
 /**
  * 明法众联 · 应用路由
@@ -45,6 +47,7 @@ export default function App() {
             {/* ---------- 旧登录链接兼容 ---------- */}
             <Route path="/login/citizen" element={<Navigate to="/?role=citizen" replace />} />
             <Route path="/login/institution" element={<Navigate to="/?role=institution" replace />} />
+            <Route path="/login/admin" element={<Navigate to="/?role=admin" replace />} />
 
             {/* ---------- C 端群众服务（需群众身份） ---------- */}
             <Route element={<ProtectedRoute allow="citizen" />}>
@@ -61,10 +64,25 @@ export default function App() {
             <Route element={<ProtectedRoute allow="institution" />}>
               <Route element={<InstitutionShell />}>
                 <Route path="/institution" element={<InstitutionHomePage />} />
-                <Route path="/institution/justice" element={<InstitutionSolutionPage solutionId="justice" />} />
-                <Route path="/institution/street" element={<InstitutionSolutionPage solutionId="street" />} />
-                <Route path="/institution/school" element={<InstitutionSolutionPage solutionId="school" />} />
-                <Route path="/institution/enterprise" element={<InstitutionSolutionPage solutionId="enterprise" />} />
+                <Route path="/institution/justice" element={<InstitutionScopeRoute institutionType="justice"><InstitutionSolutionPage solutionId="justice" /></InstitutionScopeRoute>} />
+                <Route path="/institution/street" element={<InstitutionScopeRoute institutionType="street"><InstitutionSolutionPage solutionId="street" /></InstitutionScopeRoute>} />
+                <Route path="/institution/school" element={<InstitutionScopeRoute institutionType="school"><InstitutionSolutionPage solutionId="school" /></InstitutionScopeRoute>} />
+                <Route path="/institution/enterprise" element={<InstitutionScopeRoute institutionType="enterprise"><InstitutionSolutionPage solutionId="enterprise" /></InstitutionScopeRoute>} />
+              </Route>
+            </Route>
+
+            {/* ---------- 平台管理（可查看全部机构） ---------- */}
+            <Route element={<ProtectedRoute allow="admin" />}>
+              <Route element={<AdminShell />}>
+                <Route path="/admin" element={<AdminHomePage />} />
+                <Route path="/admin/justice" element={<InstitutionHomePage viewType="justice" adminView />} />
+                <Route path="/admin/street" element={<InstitutionHomePage viewType="street" adminView />} />
+                <Route path="/admin/school" element={<InstitutionHomePage viewType="school" adminView />} />
+                <Route path="/admin/enterprise" element={<InstitutionHomePage viewType="enterprise" adminView />} />
+                <Route path="/admin/justice/solution" element={<InstitutionSolutionPage solutionId="justice" adminView />} />
+                <Route path="/admin/street/solution" element={<InstitutionSolutionPage solutionId="street" adminView />} />
+                <Route path="/admin/school/solution" element={<InstitutionSolutionPage solutionId="school" adminView />} />
+                <Route path="/admin/enterprise/solution" element={<InstitutionSolutionPage solutionId="enterprise" adminView />} />
               </Route>
             </Route>
 

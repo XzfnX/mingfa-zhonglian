@@ -121,7 +121,7 @@ export default function CitizenAidPage() {
               ))}
             </ul>
             <p className="mt-3 text-[12px] leading-relaxed text-ink-soft">
-              演示环境不提供真实电话拨打与在线申请功能，具体联系方式请以当地公布的信息为准。
+              具体申请方式与联系方式请以当地司法行政部门和法律援助机构公布的信息为准。
             </p>
           </section>
         </div>

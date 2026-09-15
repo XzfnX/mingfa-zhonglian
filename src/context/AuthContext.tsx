@@ -15,6 +15,7 @@ interface AuthContextValue {
   user: SessionUser | null
   isCitizen: boolean
   isInstitution: boolean
+  isAdmin: boolean
   /** 登录（前端校验演示账号表） */
   login: (payload: SessionUser) => void
   logout: () => void
@@ -27,7 +28,7 @@ function readSession(): SessionUser | null {
     const raw = sessionStorage.getItem(SESSION_KEY)
     if (!raw) return null
     const parsed = JSON.parse(raw) as SessionUser
-    if (parsed && parsed.loggedIn === true && (parsed.userType === 'citizen' || parsed.userType === 'institution')) {
+    if (parsed && parsed.loggedIn === true && ['citizen', 'institution', 'admin'].includes(parsed.userType)) {
       return parsed
     }
     return null
@@ -67,6 +68,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       user,
       isCitizen: user?.userType === 'citizen',
       isInstitution: user?.userType === 'institution',
+      isAdmin: user?.userType === 'admin',
       login,
       logout,
     }),
@@ -104,7 +106,7 @@ export function verifyDemoLogin(
     } else if (!inputUser.trim() || !inputPass) {
       onError('请输入账号和密码')
     } else {
-      onError('账号或密码不正确，请点击「一键填入演示账号」后重试')
+      onError('账号或密码不正确，请使用快捷填入后重试')
     }
   }, 620)
 }
@@ -125,7 +127,8 @@ export function firstRouteForInstitution(t: InstitutionType | undefined) {
 }
 
 export function userTypeLabel(t?: UserType) {
-  if (t === 'citizen') return '群众端'
+  if (t === 'citizen') return '个人端'
   if (t === 'institution') return '机构端'
+  if (t === 'admin') return '管理员端'
   return '未登录'
 }

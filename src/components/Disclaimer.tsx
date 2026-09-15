@@ -31,7 +31,7 @@ export function Disclaimer({ variant = 'block', title = '法律声明', text, cl
           className,
         )}
       >
-        <span className="font-medium">演示环境说明：</span>
+        <span className="font-medium">{title}：</span>
         {text}
       </div>
     )
@@ -145,12 +145,11 @@ export function Footer() {
 
         <div className="mt-8 border-t border-line pt-6">
           <p className="text-xs leading-relaxed text-ink-soft">
-            法律声明：本网站为大学生创新创业比赛参赛 Demo，全部内容仅用于公益普法宣传与产品能力演示，
-            不构成针对具体案件的正式法律意见；网站不提供真实支付、真实购买、真实法律咨询、真实用户注册与真实信息采集功能。
+            法律声明：本平台内容用于普法知识参考，不构成针对具体案件的正式法律意见。
             遇到紧急、复杂或正在诉讼中的事项，请咨询专业律师或当地法律援助机构。
           </p>
           <p className="mt-3 text-xs text-ink-soft">
-            © {year} 明法众联项目组 · 参赛演示版本 · 页面数据均为项目阶段性成果或演示用模拟数据
+            © {year} 明法众联项目组 · 智慧普法服务平台
           </p>
         </div>
       </div>

@@ -8,8 +8,8 @@ export const CITIZEN_DEMO: DemoUser = {
   username: '13800000001',
   password: '123456',
   userType: 'citizen',
-  displayName: '演示群众用户',
-  hint: '手机号登录 · 演示环境',
+  displayName: '个人用户',
+  hint: '手机号登录',
 }
 
 export const INSTITUTION_DEMO_USERS: DemoUser[] = [
@@ -18,8 +18,8 @@ export const INSTITUTION_DEMO_USERS: DemoUser[] = [
     password: 'demo123',
     userType: 'institution',
     institutionType: 'justice',
-    displayName: '演示司法局用户',
-    orgName: '示范市司法局（演示）',
+    displayName: '司法局用户',
+    orgName: '示范市司法局',
     orgRole: '普法与依法治理科',
   },
   {
@@ -27,8 +27,8 @@ export const INSTITUTION_DEMO_USERS: DemoUser[] = [
     password: 'demo123',
     userType: 'institution',
     institutionType: 'street',
-    displayName: '演示街道用户',
-    orgName: '示范街道办（演示）',
+    displayName: '街道用户',
+    orgName: '示范街道办',
     orgRole: '综合治理中心',
   },
   {
@@ -36,8 +36,8 @@ export const INSTITUTION_DEMO_USERS: DemoUser[] = [
     password: 'demo123',
     userType: 'institution',
     institutionType: 'school',
-    displayName: '演示学校用户',
-    orgName: '示范中学（演示）',
+    displayName: '学校用户',
+    orgName: '示范中学',
     orgRole: '学生发展中心 / 法治教育组',
   },
   {
@@ -45,18 +45,24 @@ export const INSTITUTION_DEMO_USERS: DemoUser[] = [
     password: 'demo123',
     userType: 'institution',
     institutionType: 'enterprise',
-    displayName: '演示企业用户',
-    orgName: '示范科技企业（演示）',
+    displayName: '企业用户',
+    orgName: '示范科技企业',
     orgRole: '人力资源与合规部',
   },
 ]
 
-export const ALL_DEMO_USERS: DemoUser[] = [CITIZEN_DEMO, ...INSTITUTION_DEMO_USERS]
+export const ADMIN_DEMO: DemoUser = {
+  username: 'admin@mingfa.cn',
+  password: 'admin123',
+  userType: 'admin',
+  displayName: '平台管理员',
+  orgName: '明法众联运营中心',
+  orgRole: '平台运营与服务管理',
+}
+
+export const ALL_DEMO_USERS: DemoUser[] = [CITIZEN_DEMO, ...INSTITUTION_DEMO_USERS, ADMIN_DEMO]
 
 /** 按机构类型取快捷填入的演示账号 */
 export function getInstitutionDemo(type: 'justice' | 'street' | 'school' | 'enterprise') {
   return INSTITUTION_DEMO_USERS.find((u) => u.institutionType === type)!
 }
-
-export const DEMO_ENV_NOTICE =
-  '本页面为参赛路演演示环境，登录仅用于区分群众端与机构端，不涉及真实账号体系、短信验证与个人信息采集。'

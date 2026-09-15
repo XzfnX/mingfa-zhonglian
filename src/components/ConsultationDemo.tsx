@@ -178,7 +178,7 @@ export function ConsultationDemo({ initialQuestion = '' }: { initialQuestion?: s
         </div>
 
         <p id="consult-hint" className="mt-2 text-[12px] text-ink-soft">
-          演示环境：回答来自本地模拟数据，不调用真实 AI 接口，不构成正式法律意见。
+          回答依据平台普法知识库整理，仅供一般性参考，不构成针对具体案件的正式法律意见。
         </p>
 
         {/* 语音状态提示 */}

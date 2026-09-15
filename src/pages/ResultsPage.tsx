@@ -186,7 +186,7 @@ export default function ResultsPage() {
           <SectionHeading
             eyebrow="数据呈现"
             title="用数据说明服务的规模与结构"
-            desc="以下图表为演示用模拟数据，用于展示项目的数据化表达能力。图表支持维度筛选与数值查看。"
+            desc="通过多维指标呈现项目服务规模、覆盖结构与阶段成效，支持维度筛选与数值查看。"
             className="mb-8"
           />
           <div className="grid gap-5 lg:grid-cols-2">
@@ -347,7 +347,7 @@ export default function ResultsPage() {
             <div className="max-w-xl">
               <h2 className="font-serif text-[24px] font-semibold leading-snug text-ink">想进一步了解项目与方案？</h2>
               <p className="mt-3 text-[15px] leading-relaxed text-ink-soft">
-                可以查看四类机构解决方案的详细能力，或预约一次方案演示沟通。
+                可以查看本机构解决方案的详细能力，或发起方案咨询。
               </p>
             </div>
             <div className="mt-6 flex flex-wrap gap-3 lg:mt-0">
@@ -357,7 +357,7 @@ export default function ResultsPage() {
               </Link>
               <button type="button" onClick={() => setModalOpen(true)} className="mf-btn-outline gap-1.5">
                 <CalendarCheck className="h-4 w-4" aria-hidden="true" />
-                预约方案演示
+                方案咨询
               </button>
               <Link to="/about" className="mf-btn-ghost gap-1.5 px-3">
                 关于项目

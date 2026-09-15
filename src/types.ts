@@ -1,6 +1,6 @@
 /** 全局类型定义：明法众联 */
 
-export type UserType = 'citizen' | 'institution'
+export type UserType = 'citizen' | 'institution' | 'admin'
 
 /** B 端机构类型 */
 export type InstitutionType = 'justice' | 'street' | 'school' | 'enterprise'
@@ -9,12 +9,12 @@ export type InstitutionType = 'justice' | 'street' | 'school' | 'enterprise'
 export interface SessionUser {
   loggedIn: true
   userType: UserType
-  /** 仅 B 端账号存在 */
+  /** 仅机构账号存在 */
   institutionType?: InstitutionType
   displayName: string
-  /** 仅 B 端账号存在：机构名称（演示数据） */
+  /** 机构或管理员账号的组织名称 */
   orgName?: string
-  /** 仅 B 端账号存在：演示岗位 */
+  /** 机构或管理员账号的岗位 */
   orgRole?: string
 }
 

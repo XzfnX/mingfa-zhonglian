@@ -3,7 +3,7 @@ import { useAuth } from '../context/AuthContext'
 
 interface ProtectedRouteProps {
   /** 允许访问的身份 */
-  allow: 'citizen' | 'institution' | 'any'
+  allow: 'citizen' | 'institution' | 'admin' | 'any'
 }
 
 /**
@@ -26,7 +26,7 @@ export function ProtectedRoute({ allow }: ProtectedRouteProps) {
 
   if (allow !== 'any' && user.userType !== allow) {
     // 越权访问：C 端账号访问 B 端（或反向）时，跳回自己身份的首页并提示
-    const home = user.userType === 'citizen' ? '/citizen' : '/institution'
+    const home = user.userType === 'citizen' ? '/citizen' : user.userType === 'admin' ? '/admin' : '/institution'
     return <Navigate to={home} replace state={{ reason: 'cross-role' }} />
   }
 

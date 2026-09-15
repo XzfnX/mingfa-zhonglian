@@ -1,10 +1,12 @@
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Area, AreaChart, Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
-import { ArrowRight, BarChart3, CalendarCheck, ChevronRight, CircleCheck, FileText, FolderKanban, UsersRound } from 'lucide-react'
+import { ArrowRight, BarChart3, CalendarCheck, CircleCheck, FileText, FolderKanban, UsersRound } from 'lucide-react'
 import { DemoRequestModal } from '../components/DemoRequestModal'
 import { useAuth } from '../context/AuthContext'
 import { institutionSolutions, institutionTypeLabel } from '../data/institutionSolutions'
+import { getInstitutionDemo } from '../data/demoUsers'
+import type { InstitutionType } from '../types'
 
 const trendData = [
   { month: '4月', reach: 4100, consult: 1720 },
@@ -15,34 +17,53 @@ const trendData = [
   { month: '9月', reach: 8100, consult: 3520 },
 ]
 
-const audienceData = [
-  { name: '社区居民', value: 86 },
-  { name: '青少年', value: 73 },
-  { name: '企业员工', value: 68 },
-  { name: '老年人', value: 61 },
-  { name: '农民工', value: 54 },
-]
+const audienceByType: Record<InstitutionType, { name: string; value: number }[]> = {
+  justice: [{ name: '社区居民', value: 86 }, { name: '青少年', value: 73 }, { name: '老年人', value: 61 }, { name: '农民工', value: 54 }],
+  street: [{ name: '社区居民', value: 91 }, { name: '网格员', value: 84 }, { name: '老年人', value: 72 }, { name: '流动人口', value: 63 }],
+  school: [{ name: '七年级', value: 92 }, { name: '八年级', value: 88 }, { name: '九年级', value: 81 }, { name: '教职工', value: 76 }],
+  enterprise: [{ name: '新员工', value: 94 }, { name: '管理人员', value: 86 }, { name: '业务骨干', value: 79 }, { name: '一线员工', value: 72 }],
+}
 
-const projects = [
-  { name: '秋季重点人群普法专项', type: '主题普法', audience: '社区居民 / 老年人', progress: '执行中', reach: '3,260人', date: '2026-09-28' },
-  { name: '基层矛盾风险预防内容包', type: '内容交付', audience: '街道与社区', progress: '待验收', reach: '18个点位', date: '2026-09-22' },
-  { name: '校园法治教育课程季', type: '课程服务', audience: '七至九年级', progress: '执行中', reach: '1,840人', date: '2026-10-10' },
-  { name: '员工合规宣教月', type: '企业培训', audience: '企业员工', progress: '已完成', reach: '960人', date: '2026-08-31' },
-]
+const projectsByType: Record<InstitutionType, { name: string; type: string; audience: string; progress: string; reach: string; date: string }[]> = {
+  justice: [
+    { name: '秋季重点人群普法专项', type: '主题普法', audience: '社区居民 / 老年人', progress: '执行中', reach: '3,260人', date: '2026-09-28' },
+    { name: '年度普法资源更新', type: '内容交付', audience: '基层普法队伍', progress: '待验收', reach: '126项资源', date: '2026-09-22' },
+    { name: '法治需求调研季', type: '需求调研', audience: '重点服务人群', progress: '执行中', reach: '2,100份', date: '2026-10-10' },
+  ],
+  street: [
+    { name: '基层矛盾风险排查', type: '基层治理', audience: '社区与网格', progress: '执行中', reach: '46个网格', date: '2026-09-26' },
+    { name: '反诈宣传任务周', type: '主题宣传', audience: '社区居民', progress: '待验收', reach: '18个点位', date: '2026-09-22' },
+    { name: '法治议事角共建', type: '阵地建设', audience: '社区议事代表', progress: '执行中', reach: '9个社区', date: '2026-10-08' },
+  ],
+  school: [
+    { name: '秋季校园法治课程', type: '课程服务', audience: '七至九年级', progress: '执行中', reach: '1,840人', date: '2026-10-10' },
+    { name: '模拟法庭实践周', type: '实践教学', audience: '八年级学生', progress: '待验收', reach: '12个班级', date: '2026-09-25' },
+    { name: '教师法治教育培训', type: '师资培训', audience: '班主任与德育教师', progress: '已完成', reach: '86人', date: '2026-09-12' },
+  ],
+  enterprise: [
+    { name: '员工合规宣教月', type: '企业培训', audience: '全体员工', progress: '执行中', reach: '960人', date: '2026-09-30' },
+    { name: '劳动用工风险专题', type: '专题课程', audience: '管理人员', progress: '待验收', reach: '12个部门', date: '2026-09-24' },
+    { name: '反诈与信息安全培训', type: '风险教育', audience: '新入职员工', progress: '已完成', reach: '286人', date: '2026-09-08' },
+  ],
+}
 
-export default function InstitutionHomePage() {
+export default function InstitutionHomePage({ viewType, adminView = false }: { viewType?: InstitutionType; adminView?: boolean } = {}) {
   const { user } = useAuth()
   const [modalOpen, setModalOpen] = useState(false)
   const currentSolution = useMemo(
-    () => institutionSolutions.find((solution) => solution.id === user?.institutionType) ?? institutionSolutions[0],
-    [user?.institutionType],
+    () => institutionSolutions.find((solution) => solution.id === (viewType ?? user?.institutionType)) ?? institutionSolutions[0],
+    [viewType, user?.institutionType],
   )
+  const activeOrg = adminView ? getInstitutionDemo(currentSolution.id).orgName : user?.orgName
+  const detailPath = adminView ? `/admin/${currentSolution.id}/solution` : `/institution/${currentSolution.id}`
+  const audienceData = audienceByType[currentSolution.id]
+  const projects = projectsByType[currentSolution.id]
   const metricValues = currentSolution.metrics.slice(0, 4)
   const metricFallback = [
     { label: '累计服务人次', value: '32,680', sub: '较上期 +18.6%' },
     { label: '内容资源总量', value: '486', sub: '本月新增 32 条' },
     { label: '在执行项目', value: '12', sub: '4 个待本周交付' },
-    { label: '综合满意度', value: '96.2%', sub: '基于模拟回访数据' },
+    { label: '综合满意度', value: '96.2%', sub: '基于服务回访问卷' },
   ]
   const metrics = metricFallback.map((item, index) => ({ ...item, ...(metricValues[index] ?? {}) }))
 
@@ -50,11 +71,11 @@ export default function InstitutionHomePage() {
     <div className="mx-auto max-w-[1500px]">
       <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
         <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.14em] text-brand">机构工作台</p>
+          <p className="text-xs font-semibold uppercase tracking-[0.14em] text-brand">{adminView ? '管理员查看 / 机构后台' : '机构工作台'}</p>
           <h1 className="mt-1 text-2xl font-bold tracking-tight text-ink">业务总览</h1>
-          <p className="mt-1.5 text-sm text-ink-soft">{user?.orgName} · {institutionTypeLabel[user?.institutionType ?? '']}解决方案</p>
+          <p className="mt-1.5 text-sm text-ink-soft">{activeOrg} · {institutionTypeLabel[currentSolution.id]}解决方案</p>
         </div>
-        <button type="button" onClick={() => setModalOpen(true)} className="mf-btn-primary self-start"><CalendarCheck className="h-4 w-4" />演示咨询</button>
+        <button type="button" onClick={() => setModalOpen(true)} className="mf-btn-primary self-start"><CalendarCheck className="h-4 w-4" />方案咨询</button>
       </div>
 
       <section className="mt-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-4" aria-label="核心指标">
@@ -72,7 +93,7 @@ export default function InstitutionHomePage() {
 
       <section id="evaluation" className="mt-5 grid scroll-mt-24 gap-5 xl:grid-cols-[minmax(0,1.55fr)_minmax(320px,.85fr)]">
         <article className="border border-line bg-white">
-          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-line px-5 py-4"><div><h2 className="font-bold text-ink">服务触达趋势</h2><p className="mt-1 text-xs text-ink-soft">最近 6 个月模拟统计 · 单位：人次</p></div><div className="flex gap-4 text-xs text-ink-soft"><span className="flex items-center gap-1.5"><i className="h-2 w-2 bg-brand" />内容触达</span><span className="flex items-center gap-1.5"><i className="h-2 w-2 bg-[#5A738E]" />有效互动</span></div></div>
+          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-line px-5 py-4"><div><h2 className="font-bold text-ink">服务触达趋势</h2><p className="mt-1 text-xs text-ink-soft">最近 6 个月 · 单位：人次</p></div><div className="flex gap-4 text-xs text-ink-soft"><span className="flex items-center gap-1.5"><i className="h-2 w-2 bg-brand" />内容触达</span><span className="flex items-center gap-1.5"><i className="h-2 w-2 bg-[#5A738E]" />有效互动</span></div></div>
           <div className="h-[292px] p-4 pt-6">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={trendData} margin={{ top: 4, right: 12, left: -10, bottom: 0 }}>
@@ -122,20 +143,18 @@ export default function InstitutionHomePage() {
           <div className="mt-5 grid gap-x-5 gap-y-2 border-y border-line py-4 sm:grid-cols-2">
             {currentSolution.modules.slice(0, 6).map((module) => <p key={module.id} className="flex items-center gap-2 text-sm text-ink"><span className="h-1.5 w-1.5 bg-brand" />{module.name}</p>)}
           </div>
-          <Link to={`/institution/${currentSolution.id}`} className="mf-btn-primary mt-5">查看方案详情<ArrowRight className="h-4 w-4" /></Link>
+          <Link to={detailPath} className="mf-btn-primary mt-5">查看方案详情<ArrowRight className="h-4 w-4" /></Link>
         </article>
 
         <article className="border border-line bg-white" id="deliverables">
-          <div className="border-b border-line px-5 py-4"><h2 className="font-bold text-ink">浏览其他行业方案</h2><p className="mt-1 text-xs text-ink-soft">验证平台跨场景复制与交付能力</p></div>
+          <div className="border-b border-line px-5 py-4"><h2 className="font-bold text-ink">本机构交付成果</h2><p className="mt-1 text-xs text-ink-soft">当前解决方案的主要交付内容</p></div>
           <ul className="divide-y divide-line">
-            {institutionSolutions.filter((solution) => solution.id !== currentSolution.id).map((solution) => <li key={solution.id}><Link to={`/institution/${solution.id}`} className="group flex items-center gap-3 px-5 py-4 hover:bg-[#FAFAFB]"><span className="flex h-9 w-9 items-center justify-center bg-[#FFF7F7] text-brand"><FileText className="h-4 w-4" /></span><span className="min-w-0 flex-1"><span className="block text-sm font-semibold text-ink group-hover:text-brand">{solution.productName}</span><span className="mt-0.5 block truncate text-xs text-ink-soft">{institutionTypeLabel[solution.id]} · {solution.modules.length} 个核心模块</span></span><ChevronRight className="h-4 w-4 text-gray-400" /></Link></li>)}
+            {currentSolution.deliverables.slice(0, 4).map((item) => <li key={item.id} className="flex items-center gap-3 px-5 py-4"><span className="flex h-9 w-9 items-center justify-center bg-[#FFF7F7] text-brand"><FileText className="h-4 w-4" /></span><span className="min-w-0 flex-1"><span className="block text-sm font-semibold text-ink">{item.name}</span><span className="mt-0.5 block truncate text-xs text-ink-soft">{item.format}</span></span></li>)}
           </ul>
         </article>
       </section>
 
-      <p className="mt-5 border-l-2 border-gray-300 bg-white px-4 py-3 text-xs leading-5 text-ink-soft">本工作台为参赛路演纯前端演示，指标、图表和项目数据均为本地模拟数据；登录状态由 sessionStorage 保存，不构成真实安全鉴权，也不提供真实付费交易。</p>
-
-      <DemoRequestModal open={modalOpen} onClose={() => setModalOpen(false)} defaultOrg={user?.orgName} defaultSolution={currentSolution.productName} />
+      <DemoRequestModal open={modalOpen} onClose={() => setModalOpen(false)} defaultOrg={activeOrg} defaultSolution={currentSolution.productName} />
     </div>
   )
 }

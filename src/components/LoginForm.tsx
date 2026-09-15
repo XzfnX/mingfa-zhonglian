@@ -22,7 +22,6 @@ import { useToast } from '../context/ToastContext'
 import {
   CITIZEN_DEMO,
   INSTITUTION_DEMO_USERS,
-  DEMO_ENV_NOTICE,
   getInstitutionDemo,
 } from '../data/demoUsers'
 import type { InstitutionType, SessionUser } from '../types'
@@ -431,11 +430,6 @@ function LoginShell({
             <div className="mt-6">{children}</div>
           </div>
 
-          {/* 演示环境说明 */}
-          <p className="mx-auto mt-4 max-w-[520px] rounded-xl border border-line bg-white/70 px-4 py-3 text-[12px] leading-relaxed text-ink-soft">
-            <span className="font-medium text-ink">演示环境说明：</span>
-            {DEMO_ENV_NOTICE}
-          </p>
         </div>
       </div>
     </div>

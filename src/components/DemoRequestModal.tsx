@@ -63,14 +63,14 @@ export function DemoRequestModal({ open, onClose, defaultOrg, defaultSolution }:
   function submit(e: React.FormEvent) {
     e.preventDefault()
     if (!org.trim()) {
-      push('请填写机构名称（演示用，可随意填写）。', 'error')
+      push('请填写机构名称。', 'error')
       return
     }
     setSubmitting(true)
     window.setTimeout(() => {
       setSubmitting(false)
-      setDone({ refId: demoRefId('DEMO'), time: new Date().toLocaleString('zh-CN') })
-      push('演示申请已记录（仅前端展示，未发送任何信息）。', 'success')
+      setDone({ refId: demoRefId('PLAN'), time: new Date().toLocaleString('zh-CN') })
+      push('咨询摘要已生成。', 'success')
     }, 900)
   }
 
@@ -91,9 +91,9 @@ export function DemoRequestModal({ open, onClose, defaultOrg, defaultSolution }:
           <div>
             <h2 id="demo-modal-title" className="flex items-center gap-2 font-serif text-[18px] font-semibold text-ink">
               <CalendarCheck className="h-5 w-5 text-brand" aria-hidden="true" />
-              预约方案演示
+              方案咨询
             </h2>
-            <p className="mt-1 text-[12px] text-ink-soft">了解方案细节与交付内容，我们提供线上或线下的演示沟通。</p>
+            <p className="mt-1 text-[12px] text-ink-soft">填写需求信息，快速梳理适合所在机构的解决方案。</p>
           </div>
           <button
             type="button"
@@ -111,13 +111,13 @@ export function DemoRequestModal({ open, onClose, defaultOrg, defaultSolution }:
             <span className="mx-auto inline-flex h-14 w-14 items-center justify-center rounded-xl2 border border-success/30 bg-success/5 text-success">
               <CheckCircle2 className="h-7 w-7" aria-hidden="true" />
             </span>
-            <h3 className="mt-4 font-serif text-[18px] font-semibold text-ink">演示申请已记录</h3>
+            <h3 className="mt-4 font-serif text-[18px] font-semibold text-ink">咨询摘要已生成</h3>
             <p className="mt-2 text-[13px] leading-relaxed text-ink-soft">
-              本功能仅用于路演展示，不会发送或保存真实信息。
+              已根据当前填写内容形成需求摘要，可用于后续方案沟通。
             </p>
             <dl className="mt-5 space-y-2 rounded-xl border border-line bg-cream-soft p-4 text-left text-[13px]">
               <div className="flex justify-between gap-3">
-                <dt className="text-ink-soft">演示编号</dt>
+                <dt className="text-ink-soft">摘要编号</dt>
                 <dd className="font-medium text-ink">{done.refId}</dd>
               </div>
               <div className="flex justify-between gap-3">
@@ -133,9 +133,6 @@ export function DemoRequestModal({ open, onClose, defaultOrg, defaultSolution }:
                 <dd className="font-medium text-ink">{done.time}</dd>
               </div>
             </dl>
-            <p className="mt-4 text-[12px] leading-relaxed text-ink-soft">
-              刷新或关闭页面后该记录会消失，因为它只存在于当前页面的前端状态中。
-            </p>
             <button type="button" onClick={onClose} className="mf-btn-primary mt-5 w-full">
               我知道了
             </button>
@@ -145,7 +142,7 @@ export function DemoRequestModal({ open, onClose, defaultOrg, defaultSolution }:
           <form onSubmit={submit} className="px-5 py-5">
             <p className="flex items-start gap-2 rounded-lg border border-line bg-cream-soft px-3.5 py-2.5 text-[12px] leading-relaxed text-ink-soft">
               <Info className="mt-0.5 h-3.5 w-3.5 shrink-0 text-brand" aria-hidden="true" />
-              演示环境：请勿填写真实隐私信息。所填内容只在当前浏览器内存中用于展示流程，不会被发送到任何服务器。
+              请勿填写身份证号、银行卡号、具体案情等敏感个人信息。
             </p>
 
             <div className="mt-5 space-y-4">
@@ -165,14 +162,14 @@ export function DemoRequestModal({ open, onClose, defaultOrg, defaultSolution }:
 
               <div>
                 <label htmlFor="demo-contact" className="mf-label">
-                  联系方式（演示用，可留空）
+                  联系方式（可留空）
                 </label>
                 <input
                   id="demo-contact"
                   className="mf-input"
                   value={contact}
                   onChange={(e) => setContact(e.target.value)}
-                  placeholder="演示环境建议留空，避免填写真实信息"
+                  placeholder="如需后续沟通可填写工作联系方式"
                 />
               </div>
 
@@ -216,10 +213,10 @@ export function DemoRequestModal({ open, onClose, defaultOrg, defaultSolution }:
                 {submitting ? (
                   <>
                     <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
-                    正在记录
+                    正在生成
                   </>
                 ) : (
-                  '提交演示申请'
+                  '生成咨询摘要'
                 )}
               </button>
             </div>
