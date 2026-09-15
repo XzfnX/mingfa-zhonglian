@@ -1,12 +1,13 @@
 import { FormEvent, useEffect, useMemo, useState } from 'react'
-import { Building2, Eye, EyeOff, Landmark, Loader2, LockKeyhole, School, ShieldCheck, Smartphone, UserCog, UsersRound } from 'lucide-react'
+import { Building2, ChartNoAxesColumn, Eye, EyeOff, Landmark, Loader2, LockKeyhole, School, ShieldCheck, Smartphone, UserCog, UsersRound } from 'lucide-react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { BrandMark } from '../components/BrandMark'
 import { useAuth, verifyDemoLogin } from '../context/AuthContext'
 import { useToast } from '../context/ToastContext'
 import { ADMIN_DEMO, CITIZEN_DEMO, getInstitutionDemo } from '../data/demoUsers'
+import { useSiteClicks } from '../hooks/useSiteClicks'
 import type { InstitutionType, UserType } from '../types'
-import { cx } from '../lib/utils'
+import { cx, formatNumber } from '../lib/utils'
 
 const institutionTypes: { id: InstitutionType; label: string; icon: typeof Landmark }[] = [
   { id: 'justice', label: '司法局', icon: Landmark },
@@ -46,6 +47,8 @@ export default function LoginGatewayPage() {
   const { user, login } = useAuth()
   const { push } = useToast()
   const navigate = useNavigate()
+  // 网站点击量：读取与 +1 都走后端 /api/clicks，前端不自行累计
+  const { total: clickTotal, state: clickState, trackClick } = useSiteClicks()
 
   const currentAccount = useMemo(() => role === 'citizen' ? CITIZEN_DEMO : role === 'admin' ? ADMIN_DEMO : getInstitutionDemo(institutionType), [role, institutionType])
 
@@ -72,6 +75,8 @@ export default function LoginGatewayPage() {
   function submit(event: FormEvent) {
     event.preventDefault()
     setError('')
+    // 点「登录并进入系统」属于一次有效点击
+    void trackClick()
     verifyDemoLogin(username, password, currentAccount.username, currentAccount.password, {
       userType: currentAccount.userType,
       institutionType: currentAccount.institutionType,
@@ -96,7 +101,7 @@ export default function LoginGatewayPage() {
         </div>
       </header>
       {/* 登录表单：单卡片居中，横向长方形比例 */}
-      <div className="mx-auto flex min-h-[calc(100vh-77px)] w-full max-w-[1180px] items-center justify-center px-5 py-10 sm:px-8">
+      <div className="mx-auto flex min-h-[calc(100vh-77px)] w-full max-w-[1180px] flex-col items-center justify-center px-5 py-10 sm:px-8">
         <section className="w-full max-w-[760px] rounded-lg border border-line bg-white p-6 shadow-card sm:p-9" aria-labelledby="login-title">
           <p className="text-sm font-semibold text-brand">明法众联服务入口</p>
           <h1 id="login-title" className="mt-2 text-2xl font-bold tracking-tight text-ink sm:text-[30px]">登录后进入对应服务系统</h1>
@@ -148,6 +153,23 @@ export default function LoginGatewayPage() {
             </div>
           </form>
         </section>
+
+        {/* 网站点击量卡片：数据来自后端 /api/clicks 实时统计 */}
+        <div className="mt-4 flex w-full max-w-[760px] flex-wrap items-center justify-center gap-x-2 gap-y-1 rounded-lg border border-line bg-white px-4 py-2.5 text-[13px] text-ink-soft">
+          <ChartNoAxesColumn className="h-4 w-4 text-brand" aria-hidden="true" />
+          本站点击量
+          <strong
+            className="font-serif text-[17px] font-semibold leading-none text-brand"
+            title={clickState === 'offline' ? '后端点击量接口暂不可用' : '数据来自后端实时统计'}
+          >
+            {clickTotal === null ? '—' : formatNumber(clickTotal)}
+          </strong>
+          次
+          <span className="inline-flex items-center gap-1 rounded-full border border-success/30 bg-success/5 px-1.5 py-0.5 text-[10px] font-medium leading-none text-success">
+            <span className="h-1.5 w-1.5 rounded-full bg-success" aria-hidden="true" />
+            实时
+          </span>
+        </div>
       </div>
     </main>
   )

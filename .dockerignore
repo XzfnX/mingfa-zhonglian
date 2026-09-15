@@ -1,0 +1,22 @@
+# 依赖与构建产物
+node_modules
+**/node_modules
+dist
+dist-ssr
+.vite
+
+# 运行时数据（SQLite 数据库文件不进入镜像）
+data
+backend/data
+*.db
+*.db-wal
+*.db-shm
+
+# 仓库与本地配置
+.git
+.github
+.env
+.env.*
+*.local
+*.log
+README.md

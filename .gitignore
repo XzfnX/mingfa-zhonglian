@@ -5,3 +5,14 @@ dist-ssr
 .vite
 .DS_Store
 *.log
+
+# 环境变量（本地覆盖，不入库）
+.env
+.env.*
+
+# 后端运行时数据：SQLite 数据库文件由 Docker 卷 / 宿主机目录持久化，不提交到 Git
+data/
+backend/data/
+*.db
+*.db-wal
+*.db-shm

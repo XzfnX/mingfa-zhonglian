@@ -1,0 +1,54 @@
+# 明法众联 · 一键启动前端 + 点击量统计后端
+#   docker compose up -d --build
+#   访问 http://<服务器IP>:8080
+services:
+  backend:
+    build:
+      context: ./backend
+    image: mingfa-zhonglian-backend:latest
+    container_name: mingfa-zhonglian-backend
+    restart: unless-stopped
+    environment:
+      PORT: "4000"
+      # SQLite 数据库文件路径（指向挂载卷，容器重建不丢数据）
+      DB_PATH: /data/clicks.db
+      # 仅当前端单独部署在其它域名（如 GitHub Pages）直接访问接口时才需要放开：
+      # ALLOWED_ORIGIN: "https://xzfnx.github.io"
+    volumes:
+      # 具名卷：docker compose up --build / down / 服务器重启都不会丢失数据（只有 down -v 会清空）
+      - clicks-data:/data
+      # 若希望数据放在宿主机目录便于备份，可改用下面这行（需先 chown 1000:1000 ./data）：
+      # - ./data:/data
+    healthcheck:
+      test:
+        - CMD
+        - node
+        - -e
+        - "fetch('http://127.0.0.1:4000/api/health').then((r) => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))"
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+    networks:
+      - mingfa
+
+  web:
+    build:
+      context: .
+    image: mingfa-zhonglian-web:latest
+    container_name: mingfa-zhonglian-web
+    restart: unless-stopped
+    depends_on:
+      backend:
+        condition: service_healthy
+    ports:
+      - "8080:80"
+    networks:
+      - mingfa
+
+volumes:
+  clicks-data:
+
+networks:
+  mingfa:
+    driver: bridge
