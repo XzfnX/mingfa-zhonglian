@@ -1,8 +1,10 @@
 import { FormEvent, useState } from 'react'
 import { ArrowRight, BookOpenText, ChevronRight, FileText, LifeBuoy, MessageSquareText, Search, ShieldCheck, UsersRound } from 'lucide-react'
 import { Link, useNavigate } from 'react-router-dom'
-import { AccessibilityControls } from '../components/AccessibilityControls'
+import { AccessibilityOnboardingModal } from '../components/AccessibilitySettings'
 import { Disclaimer } from '../components/Disclaimer'
+import { useA11y } from '../context/AccessibilityContext'
+import { useToast } from '../context/ToastContext'
 import { CITIZEN_DISCLAIMER, citizenServices, focusGroups } from '../data/citizenServices'
 
 const serviceMeta = {
@@ -23,6 +25,8 @@ const hotQuestions = [
 export default function CitizenHomePage() {
   const [question, setQuestion] = useState('')
   const navigate = useNavigate()
+  const a11y = useA11y()
+  const { push } = useToast()
   const primaryServices = citizenServices.filter((item) => item.id in serviceMeta)
 
   function submit(event: FormEvent) {
@@ -101,9 +105,23 @@ export default function CitizenHomePage() {
           </aside>
         </div>
 
-        <div className="mt-10"><AccessibilityControls /></div>
-        <div className="mt-6"><Disclaimer text={CITIZEN_DISCLAIMER} /></div>
+        <div className="mt-10"><Disclaimer text={CITIZEN_DISCLAIMER} /></div>
       </div>
+
+      {/* 首次进入个人端时优先完成适老化与无障碍设置，完成或跳过后不再自动弹出 */}
+      {!a11y.hasCompletedOnboarding && (
+        <AccessibilityOnboardingModal
+          onConfirm={(settings) => {
+            a11y.update(settings)
+            a11y.completeOnboarding()
+            push('适老化与无障碍设置已保存。', 'success')
+          }}
+          onSkip={() => {
+            a11y.completeOnboarding()
+            push('已保持默认设置，可在「设置 → 适老化与无障碍」中随时调整。', 'info')
+          }}
+        />
+      )}
     </>
   )
 }

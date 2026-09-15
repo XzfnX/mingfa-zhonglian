@@ -9,7 +9,7 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useState } 
  */
 export type FontSize = 'normal' | 'large' | 'xlarge'
 
-interface A11ySettings {
+export interface A11ySettings {
   fontSize: FontSize
   highContrast: boolean
   reducedMotion: boolean
@@ -21,7 +21,12 @@ interface A11yContextValue extends A11ySettings {
   toggleContrast: () => void
   toggleMotion: () => void
   toggleHit: () => void
+  /** 一次性写入多项偏好，供引导弹窗保存草稿使用 */
+  update: (patch: Partial<A11ySettings>) => void
   reset: () => void
+  /** 是否已完成首次适老化与无障碍引导（仅影响是否自动弹出引导弹窗） */
+  hasCompletedOnboarding: boolean
+  completeOnboarding: () => void
 }
 
 const DEFAULTS: A11ySettings = {
@@ -32,6 +37,7 @@ const DEFAULTS: A11ySettings = {
 }
 
 const STORAGE_KEY = 'mfzl.a11y'
+const ONBOARDING_KEY = 'mfzl.a11y.onboarded'
 
 const A11yContext = createContext<A11yContextValue | null>(null)
 
@@ -57,6 +63,15 @@ export function AccessibilityProvider({ children }: { children: React.ReactNode 
     return DEFAULTS
   })
 
+  // 首次引导标记与偏好分开存储：恢复默认设置不会让引导弹窗重新弹出
+  const [hasCompletedOnboarding, setHasCompletedOnboarding] = useState(() => {
+    try {
+      return localStorage.getItem(ONBOARDING_KEY) === '1'
+    } catch {
+      return false
+    }
+  })
+
   useEffect(() => {
     applyToDocument(settings)
     try {
@@ -66,15 +81,35 @@ export function AccessibilityProvider({ children }: { children: React.ReactNode 
     }
   }, [settings])
 
+  const completeOnboarding = useCallback(() => {
+    setHasCompletedOnboarding(true)
+    try {
+      localStorage.setItem(ONBOARDING_KEY, '1')
+    } catch {
+      /* 忽略 */
+    }
+  }, [])
+
   const setFontSize = useCallback((fontSize: FontSize) => setSettings((p) => ({ ...p, fontSize })), [])
   const toggleContrast = useCallback(() => setSettings((p) => ({ ...p, highContrast: !p.highContrast })), [])
   const toggleMotion = useCallback(() => setSettings((p) => ({ ...p, reducedMotion: !p.reducedMotion })), [])
   const toggleHit = useCallback(() => setSettings((p) => ({ ...p, largeHit: !p.largeHit })), [])
+  const update = useCallback((patch: Partial<A11ySettings>) => setSettings((p) => ({ ...p, ...patch })), [])
   const reset = useCallback(() => setSettings(DEFAULTS), [])
 
   const value = useMemo<A11yContextValue>(
-    () => ({ ...settings, setFontSize, toggleContrast, toggleMotion, toggleHit, reset }),
-    [settings, setFontSize, toggleContrast, toggleMotion, toggleHit, reset],
+    () => ({
+      ...settings,
+      setFontSize,
+      toggleContrast,
+      toggleMotion,
+      toggleHit,
+      update,
+      reset,
+      hasCompletedOnboarding,
+      completeOnboarding,
+    }),
+    [settings, setFontSize, toggleContrast, toggleMotion, toggleHit, update, reset, hasCompletedOnboarding, completeOnboarding],
   )
 
   return <A11yContext.Provider value={value}>{children}</A11yContext.Provider>

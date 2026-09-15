@@ -12,6 +12,8 @@ import CitizenConsultPage from './pages/CitizenConsultPage'
 import CitizenCasesPage from './pages/CitizenCasesPage'
 import CitizenDocumentsPage from './pages/CitizenDocumentsPage'
 import CitizenAidPage from './pages/CitizenAidPage'
+import CitizenSettingsPage from './pages/CitizenSettingsPage'
+import CitizenAccessibilityPage from './pages/CitizenAccessibilityPage'
 import InstitutionHomePage from './pages/InstitutionHomePage'
 import InstitutionSolutionPage from './pages/InstitutionSolutionPage'
 import ResultsPage from './pages/ResultsPage'
@@ -57,6 +59,8 @@ export default function App() {
                 <Route path="/citizen/cases" element={<CitizenCasesPage />} />
                 <Route path="/citizen/documents" element={<CitizenDocumentsPage />} />
                 <Route path="/citizen/aid" element={<CitizenAidPage />} />
+                <Route path="/citizen/settings" element={<CitizenSettingsPage />} />
+                <Route path="/citizen/settings/accessibility" element={<CitizenAccessibilityPage />} />
               </Route>
             </Route>
 

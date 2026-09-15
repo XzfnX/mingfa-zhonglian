@@ -446,7 +446,7 @@ export const citizenServices: {
     id: 'accessibility',
     title: '无障碍与适老',
     desc: '大字号、高对比度、模拟语音输入与播报，降低使用门槛。',
-    to: '/citizen#accessibility',
+    to: '/citizen/settings/accessibility',
     icon: 'Accessibility',
     points: ['大字号', '高对比度', '语音辅助'],
   },
