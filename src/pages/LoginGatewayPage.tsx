@@ -1,5 +1,5 @@
 import { FormEvent, useEffect, useMemo, useState } from 'react'
-import { Building2, CheckCircle2, Eye, EyeOff, Landmark, Loader2, LockKeyhole, School, ShieldCheck, Smartphone, UserCog, UsersRound } from 'lucide-react'
+import { Building2, Eye, EyeOff, Landmark, Loader2, LockKeyhole, School, ShieldCheck, Smartphone, UserCog, UsersRound } from 'lucide-react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { BrandMark } from '../components/BrandMark'
 import { useAuth, verifyDemoLogin } from '../context/AuthContext'
@@ -27,10 +27,10 @@ function safeTarget(from: string | null, role: UserType) {
 }
 
 const roleMeta = {
-  citizen: { label: '个人端', icon: UsersRound, accountLabel: '手机号', desc: '面向普通群众，提供普惠、免费、易理解的法律服务路径。' },
-  institution: { label: '机构端', icon: Building2, accountLabel: '机构账号', desc: '机构账号仅进入所属机构的独立工作台与业务方案。' },
-  admin: { label: '管理员', icon: UserCog, accountLabel: '管理员账号', desc: '统一查看四类机构的运营总览，并进入各机构后台。' },
-} satisfies Record<UserType, { label: string; icon: typeof UsersRound; accountLabel: string; desc: string }>
+  citizen: { label: '个人端', icon: UsersRound, accountLabel: '手机号' },
+  institution: { label: '机构端', icon: Building2, accountLabel: '机构账号' },
+  admin: { label: '管理员', icon: UserCog, accountLabel: '管理员账号' },
+} satisfies Record<UserType, { label: string; icon: typeof UsersRound; accountLabel: string }>
 
 export default function LoginGatewayPage() {
   const [searchParams, setSearchParams] = useSearchParams()
@@ -95,8 +95,9 @@ export default function LoginGatewayPage() {
           <p className="hidden text-sm text-ink-soft sm:block">统一身份入口</p>
         </div>
       </header>
-      <div className="mx-auto grid max-w-[1180px] gap-8 px-5 py-8 sm:px-8 lg:grid-cols-[minmax(0,650px)_minmax(300px,1fr)] lg:py-14">
-        <section className="border border-line bg-white p-6 shadow-card sm:p-9" aria-labelledby="login-title">
+      {/* 登录表单：单卡片居中，横向长方形比例 */}
+      <div className="mx-auto flex min-h-[calc(100vh-77px)] w-full max-w-[1180px] items-center justify-center px-5 py-10 sm:px-8">
+        <section className="w-full max-w-[760px] rounded-lg border border-line bg-white p-6 shadow-card sm:p-9" aria-labelledby="login-title">
           <p className="text-sm font-semibold text-brand">明法众联服务入口</p>
           <h1 id="login-title" className="mt-2 text-2xl font-bold tracking-tight text-ink sm:text-[30px]">登录后进入对应服务系统</h1>
           <p className="mt-3 text-sm leading-6 text-ink-soft">个人服务、机构业务与平台管理采用独立入口和权限范围。</p>
@@ -122,39 +123,31 @@ export default function LoginGatewayPage() {
           )}
 
           <form className="mt-6" onSubmit={submit} noValidate>
-            <label htmlFor="gateway-account" className="mf-label">{roleMeta[role].accountLabel}</label>
-            <div className="relative">
-              {role === 'citizen' ? <Smartphone className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" /> : <CurrentRoleIcon className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />}
-              <input id="gateway-account" autoComplete="username" className="mf-input pl-10" value={username} onChange={(event) => setUsername(event.target.value)} placeholder={`请输入${roleMeta[role].accountLabel}`} aria-invalid={Boolean(error)} />
-            </div>
-            <div className="mt-4">
-              <label htmlFor="gateway-password" className="mf-label">密码</label>
-              <div className="relative">
-                <LockKeyhole className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
-                <input id="gateway-password" type={showPassword ? 'text' : 'password'} autoComplete="current-password" className="mf-input px-10" value={password} onChange={(event) => setPassword(event.target.value)} placeholder="请输入密码" aria-invalid={Boolean(error)} />
-                <button type="button" onClick={() => setShowPassword((value) => !value)} className="absolute right-1 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center text-ink-soft hover:text-ink" aria-label={showPassword ? '隐藏密码' : '显示密码'}>{showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}</button>
+            {/* 账号在上、密码在下，单列纵向排布 */}
+            <div className="grid gap-4">
+              <div>
+                <label htmlFor="gateway-account" className="mf-label">{roleMeta[role].accountLabel}</label>
+                <div className="relative">
+                  {role === 'citizen' ? <Smartphone className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" /> : <CurrentRoleIcon className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />}
+                  <input id="gateway-account" autoComplete="username" className="mf-input pl-10" value={username} onChange={(event) => setUsername(event.target.value)} placeholder={`请输入${roleMeta[role].accountLabel}`} aria-invalid={Boolean(error)} />
+                </div>
+              </div>
+              <div>
+                <label htmlFor="gateway-password" className="mf-label">密码</label>
+                <div className="relative">
+                  <LockKeyhole className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+                  <input id="gateway-password" type={showPassword ? 'text' : 'password'} autoComplete="current-password" className="mf-input px-10" value={password} onChange={(event) => setPassword(event.target.value)} placeholder="请输入密码" aria-invalid={Boolean(error)} />
+                  <button type="button" onClick={() => setShowPassword((value) => !value)} className="absolute right-1 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center text-ink-soft hover:text-ink" aria-label={showPassword ? '隐藏密码' : '显示密码'}>{showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}</button>
+                </div>
               </div>
             </div>
             {error && <p className="mt-3 border-l-2 border-brand bg-[#FFF7F7] px-3 py-2 text-sm text-brand" role="alert">{error}</p>}
-            <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-              <button type="submit" disabled={loading} className="mf-btn-primary min-h-[46px] flex-1">{loading ? <><Loader2 className="h-4 w-4 animate-spin" />正在验证</> : '登录并进入系统'}</button>
-              <button type="button" onClick={fillAccount} className="mf-btn-outline min-h-[46px] flex-1">快捷填入账号</button>
+            <div className="mt-6 grid gap-3">
+              <button type="submit" disabled={loading} className="mf-btn-primary min-h-[46px] w-full">{loading ? <><Loader2 className="h-4 w-4 animate-spin" />正在验证</> : '登录并进入系统'}</button>
+              <button type="button" onClick={fillAccount} className="mf-btn-outline min-h-[46px] w-full">快捷填入账号</button>
             </div>
           </form>
         </section>
-
-        <aside className="border border-line bg-[#F9FAFB] p-6 sm:p-8" aria-label="身份说明">
-          <div className="flex h-11 w-11 items-center justify-center bg-brand text-white"><CurrentRoleIcon className="h-5 w-5" /></div>
-          <h2 className="mt-5 text-lg font-bold text-ink">当前登录身份</h2>
-          <p className="mt-2 text-sm leading-6 text-ink-soft">{roleMeta[role].desc}</p>
-          <dl className="mt-6 border-y border-line py-4 text-sm">
-            <div className="flex items-center justify-between gap-4 py-1.5"><dt className="text-ink-soft">账号</dt><dd className="font-mono font-semibold text-ink">{currentAccount.username}</dd></div>
-            <div className="flex items-center justify-between gap-4 py-1.5"><dt className="text-ink-soft">密码</dt><dd className="font-mono font-semibold text-ink">{currentAccount.password}</dd></div>
-          </dl>
-          <ul className="mt-6 space-y-3 text-sm text-ink-soft">
-            {(role === 'admin' ? ['查看四类机构运营概况', '进入各机构后台查看业务数据', '个人端与机构端权限相互隔离'] : role === 'institution' ? ['每个机构拥有独立工作台', '仅展示本机构业务与解决方案', '无法访问其他机构后台'] : ['通俗易懂的法律服务路径', '案例、文书与援助指引集中查询', '支持大字号与高对比度']).map((text) => <li key={text} className="flex gap-2.5"><CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-success" />{text}</li>)}
-          </ul>
-        </aside>
       </div>
     </main>
   )

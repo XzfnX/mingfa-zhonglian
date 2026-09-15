@@ -83,54 +83,56 @@ export function CitizenLoginForm() {
       tone="citizen"
       title="群众普法服务中心登录"
       subtitle="登录后即可免费使用全部群众普法服务模块"
-      side={<CitizenLoginSide />}
     >
       <form onSubmit={submit} className="space-y-4" noValidate>
-        <div>
-          <label htmlFor="citizen-phone" className="mf-label">
-            手机号
-          </label>
-          <div className="relative">
-            <UserRound className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-ink-soft" aria-hidden="true" />
-            <input
-              id="citizen-phone"
-              className="mf-input pl-10"
-              inputMode="numeric"
-              autoComplete="off"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              placeholder="请输入演示手机号"
-              aria-invalid={!!error}
-              aria-describedby={error ? 'citizen-error' : undefined}
-            />
+        {/* 账号在上、密码在下，单列纵向排布 */}
+        <div className="grid gap-4">
+          <div>
+            <label htmlFor="citizen-phone" className="mf-label">
+              手机号
+            </label>
+            <div className="relative">
+              <UserRound className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-ink-soft" aria-hidden="true" />
+              <input
+                id="citizen-phone"
+                className="mf-input pl-10"
+                inputMode="numeric"
+                autoComplete="off"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                placeholder="请输入演示手机号"
+                aria-invalid={!!error}
+                aria-describedby={error ? 'citizen-error' : undefined}
+              />
+            </div>
           </div>
-        </div>
 
-        <div>
-          <label htmlFor="citizen-password" className="mf-label">
-            密码
-          </label>
-          <div className="relative">
-            <KeyRound className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-ink-soft" aria-hidden="true" />
-            <input
-              id="citizen-password"
-              type={showPwd ? 'text' : 'password'}
-              className="mf-input px-10"
-              autoComplete="off"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="请输入演示密码"
-              aria-invalid={!!error}
-            />
-            <button
-              type="button"
-              onClick={() => setShowPwd((v) => !v)}
-              className="absolute right-1.5 top-1/2 -translate-y-1/2 rounded-lg p-2.5 text-ink-soft transition-colors hover:text-brand"
-              aria-label={showPwd ? '隐藏密码' : '显示密码'}
-              aria-pressed={showPwd}
-            >
-              {showPwd ? <EyeOff className="h-4 w-4" aria-hidden="true" /> : <Eye className="h-4 w-4" aria-hidden="true" />}
-            </button>
+          <div>
+            <label htmlFor="citizen-password" className="mf-label">
+              密码
+            </label>
+            <div className="relative">
+              <KeyRound className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-ink-soft" aria-hidden="true" />
+              <input
+                id="citizen-password"
+                type={showPwd ? 'text' : 'password'}
+                className="mf-input px-10"
+                autoComplete="off"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="请输入演示密码"
+                aria-invalid={!!error}
+              />
+              <button
+                type="button"
+                onClick={() => setShowPwd((v) => !v)}
+                className="absolute right-1.5 top-1/2 -translate-y-1/2 rounded-lg p-2.5 text-ink-soft transition-colors hover:text-brand"
+                aria-label={showPwd ? '隐藏密码' : '显示密码'}
+                aria-pressed={showPwd}
+              >
+                {showPwd ? <EyeOff className="h-4 w-4" aria-hidden="true" /> : <Eye className="h-4 w-4" aria-hidden="true" />}
+              </button>
+            </div>
           </div>
         </div>
 
@@ -253,7 +255,6 @@ export function InstitutionLoginForm() {
       tone="institution"
       title="机构解决方案中心登录"
       subtitle="登录后查看标准化产品能力、交付物清单与成效评估看板"
-      side={<InstitutionLoginSide />}
     >
       {/* 机构类型切换 */}
       <div>
@@ -286,49 +287,52 @@ export function InstitutionLoginForm() {
       </div>
 
       <form onSubmit={submit} className="mt-5 space-y-4" noValidate>
-        <div>
-          <label htmlFor="inst-account" className="mf-label">
-            机构账号
-          </label>
-          <div className="relative">
-            <UserRound className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-ink-soft" aria-hidden="true" />
-            <input
-              id="inst-account"
-              className="mf-input pl-10"
-              autoComplete="off"
-              value={account}
-              onChange={(e) => setAccount(e.target.value)}
-              placeholder={demo.username}
-              aria-invalid={!!error}
-            />
+        {/* 账号在上、密码在下，单列纵向排布 */}
+        <div className="grid gap-4">
+          <div>
+            <label htmlFor="inst-account" className="mf-label">
+              机构账号
+            </label>
+            <div className="relative">
+              <UserRound className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-ink-soft" aria-hidden="true" />
+              <input
+                id="inst-account"
+                className="mf-input pl-10"
+                autoComplete="off"
+                value={account}
+                onChange={(e) => setAccount(e.target.value)}
+                placeholder={demo.username}
+                aria-invalid={!!error}
+              />
+            </div>
           </div>
-        </div>
 
-        <div>
-          <label htmlFor="inst-password" className="mf-label">
-            密码
-          </label>
-          <div className="relative">
-            <KeyRound className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-ink-soft" aria-hidden="true" />
-            <input
-              id="inst-password"
-              type={showPwd ? 'text' : 'password'}
-              className="mf-input px-10"
-              autoComplete="off"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="请输入演示密码"
-              aria-invalid={!!error}
-            />
-            <button
-              type="button"
-              onClick={() => setShowPwd((v) => !v)}
-              className="absolute right-1.5 top-1/2 -translate-y-1/2 rounded-lg p-2.5 text-ink-soft transition-colors hover:text-brand"
-              aria-label={showPwd ? '隐藏密码' : '显示密码'}
-              aria-pressed={showPwd}
-            >
-              {showPwd ? <EyeOff className="h-4 w-4" aria-hidden="true" /> : <Eye className="h-4 w-4" aria-hidden="true" />}
-            </button>
+          <div>
+            <label htmlFor="inst-password" className="mf-label">
+              密码
+            </label>
+            <div className="relative">
+              <KeyRound className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-ink-soft" aria-hidden="true" />
+              <input
+                id="inst-password"
+                type={showPwd ? 'text' : 'password'}
+                className="mf-input px-10"
+                autoComplete="off"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="请输入演示密码"
+                aria-invalid={!!error}
+              />
+              <button
+                type="button"
+                onClick={() => setShowPwd((v) => !v)}
+                className="absolute right-1.5 top-1/2 -translate-y-1/2 rounded-lg p-2.5 text-ink-soft transition-colors hover:text-brand"
+                aria-label={showPwd ? '隐藏密码' : '显示密码'}
+                aria-pressed={showPwd}
+              >
+                {showPwd ? <EyeOff className="h-4 w-4" aria-hidden="true" /> : <Eye className="h-4 w-4" aria-hidden="true" />}
+              </button>
+            </div>
           </div>
         </div>
 
@@ -383,13 +387,11 @@ function LoginShell({
   tone,
   title,
   subtitle,
-  side,
   children,
 }: {
   tone: 'citizen' | 'institution'
   title: string
   subtitle: string
-  side: React.ReactNode
   children: React.ReactNode
 }) {
   return (
@@ -407,29 +409,23 @@ function LoginShell({
         </div>
       </div>
 
-      <div className="mf-container grid gap-10 py-10 lg:grid-cols-[1.05fr_1fr] lg:py-16">
-        {/* 左侧：说明区 */}
-        <div className="order-2 lg:order-1">{side}</div>
-
-        {/* 右侧：表单卡 */}
-        <div className="order-1 lg:order-2">
-          <div className="mx-auto w-full max-w-[520px] rounded-xl2 border border-line bg-white p-6 shadow-card sm:p-7">
-            <div
-              className={cx(
-                'mb-5 inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-[12px] font-medium',
-                tone === 'citizen'
-                  ? 'border-success/30 bg-success/5 text-success'
-                  : 'border-brand/25 bg-brand/5 text-brand',
-              )}
-            >
-              <ShieldCheck className="h-3.5 w-3.5" aria-hidden="true" />
-              {tone === 'citizen' ? '群众端 · 全部模块免费体验' : '机构端 · 演示工作区'}
-            </div>
-            <h1 className="font-serif text-[24px] font-semibold leading-snug text-ink">{title}</h1>
-            <p className="mt-2 text-[14px] leading-relaxed text-ink-soft">{subtitle}</p>
-            <div className="mt-6">{children}</div>
+      {/* 登录表单：单卡片居中，横向长方形比例 */}
+      <div className="flex min-h-[calc(100vh-65px)] items-center justify-center px-4 py-10 sm:px-6">
+        <div className="w-full max-w-[720px] rounded-xl2 border border-line bg-white p-6 shadow-card sm:p-8">
+          <div
+            className={cx(
+              'mb-5 inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-[12px] font-medium',
+              tone === 'citizen'
+                ? 'border-success/30 bg-success/5 text-success'
+                : 'border-brand/25 bg-brand/5 text-brand',
+            )}
+          >
+            <ShieldCheck className="h-3.5 w-3.5" aria-hidden="true" />
+            {tone === 'citizen' ? '群众端 · 全部模块免费体验' : '机构端 · 演示工作区'}
           </div>
-
+          <h1 className="font-serif text-[24px] font-semibold leading-snug text-ink">{title}</h1>
+          <p className="mt-2 text-[14px] leading-relaxed text-ink-soft">{subtitle}</p>
+          <div className="mt-6">{children}</div>
         </div>
       </div>
     </div>
@@ -539,77 +535,3 @@ function DemoAccountsInstitution({
   )
 }
 
-/* ---------- 左侧说明区 ---------- */
-
-function CitizenLoginSide() {
-  const items = [
-    { title: '智能普法咨询', desc: '输入问题即可获得处理步骤、材料清单与求助渠道指引。' },
-    { title: '生活案例与文书指引', desc: '六大主题案例解析，常见法律文书的准备与填写说明。' },
-    { title: '法律援助指引', desc: '申请条件、办理流程、材料清单与常见问题解答。' },
-    { title: '适老与无障碍', desc: '大字号、高对比度、模拟语音输入与播报，降低使用门槛。' },
-  ]
-  return (
-    <div>
-      <p className="mf-eyebrow mb-2">群众端 · 免费普惠</p>
-      <h2 className="font-serif text-[28px] font-semibold leading-snug text-ink sm:text-[32px]">
-        用听得懂的语言
-        <br className="hidden sm:block" />
-        了解法律常识与维权路径
-      </h2>
-      <p className="mt-3 max-w-lg text-[15px] leading-relaxed text-ink-soft">
-        所有群众普法模块免费开放，不设门槛。内容仅作一般性指引，遇到紧急或复杂事项请咨询专业律师或当地法律援助机构。
-      </p>
-      <ul className="mt-6 space-y-3">
-        {items.map((it) => (
-          <li key={it.title} className="flex gap-3 rounded-xl border border-line bg-white p-4">
-            <span className="mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-success/10 text-success">
-              <CheckCircle2 className="h-3.5 w-3.5" aria-hidden="true" />
-            </span>
-            <span>
-              <span className="block text-[15px] font-semibold text-ink">{it.title}</span>
-              <span className="mt-0.5 block text-[13px] leading-relaxed text-ink-soft">{it.desc}</span>
-            </span>
-          </li>
-        ))}
-      </ul>
-    </div>
-  )
-}
-
-function InstitutionLoginSide() {
-  const items = [
-    { name: '司法局', product: '智慧普法运营与成效评估平台', icon: Landmark },
-    { name: '街道政府', product: '基层法治需求与矛盾预防服务包', icon: Building2 },
-    { name: '学校', product: '校园法治教育与模拟法庭课程体系', icon: School },
-    { name: '企业', product: '企业合规宣教与员工法律风险培训', icon: Briefcase },
-  ]
-  return (
-    <div>
-      <p className="mf-eyebrow mb-2">机构端 · 可复制可交付</p>
-      <h2 className="font-serif text-[28px] font-semibold leading-snug text-ink sm:text-[32px]">
-        四类标准化解决方案
-        <br className="hidden sm:block" />
-        支撑机构普法工作落地
-      </h2>
-      <p className="mt-3 max-w-lg text-[15px] leading-relaxed text-ink-soft">
-        从需求诊断到成果报告，形成完整交付链条。登录后可查看各方案的核心模块、成效看板与标准交付物。
-      </p>
-      <ul className="mt-6 space-y-3">
-        {items.map((it) => {
-          const Icon = it.icon
-          return (
-            <li key={it.name} className="flex items-center gap-3.5 rounded-xl border border-line bg-white p-4">
-              <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-line bg-cream text-brand">
-                <Icon className="h-5 w-5" aria-hidden="true" />
-              </span>
-              <span className="min-w-0">
-                <span className="block text-[15px] font-semibold text-ink">{it.name}</span>
-                <span className="mt-0.5 block text-[13px] leading-relaxed text-ink-soft">{it.product}</span>
-              </span>
-            </li>
-          )
-        })}
-      </ul>
-    </div>
-  )
-}
